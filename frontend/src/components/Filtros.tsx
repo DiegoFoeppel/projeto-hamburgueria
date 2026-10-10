@@ -1,22 +1,32 @@
-import React from "react";
+import type { Filter } from "../types/types";
 
-const opcoes = [
-  { id: 1, label: "Hamburguer", value: "hamburguer" },
-  { id: 2, label: "Bebidas", value: "bebida" },
-  { id: 3, label: "Porções", value: "porcao" },
-];
+type FiltroValue = {
+  opcoes: Filter[];
+  onClick: (value: string) => void;
+  filtro: string | null;
+};
 
-const Filtros = () => {
+const style = {
+  selected:
+    "cursor-pointer bg-[#F2DAAC] text-black rounded-[5px] w-[135px] h-[35px] border",
+  default:
+    "cursor-pointer bg-bg text-bege rounded-[5px] w-[135px] h-[35px] border",
+};
+
+const Filtros = ({ opcoes, onClick, filtro }: FiltroValue) => {
   return (
     <div className='w-full md:w-[737px] mx-auto'>
       {/* <div className='flex gap-3 items-center justify-start'> */}
       <div className='flex gap-3 my-4'>
-        {opcoes.map((item) => (
+        {opcoes.map((item: Filter) => (
           <button
-            className='bg-[#F2DAAC] rounded-[5px] w-[135px] h-[35px] border'
+            className={
+              item.category === filtro ? style.selected : style.default
+            }
             key={item.id}
+            onClick={() => onClick(item.category)}
           >
-            {item.label}
+            {item.category}
           </button>
         ))}
         {/* </div> */}

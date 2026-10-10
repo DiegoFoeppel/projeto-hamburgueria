@@ -1,20 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { Link, useNavigate } from "react-router";
 import axios from "axios";
-
-interface LoginCredentials {
-  email: string;
-  password: string;
-}
+import { useAuth } from "../hooks/useAuth";
+import type { LoginCredentials } from "../types/types";
+import { loginUser } from "../services/authService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { login, user } = useAuth();
+
   const navigate = useNavigate();
+
+  console.log("login", user);
+
+  // useEffect(() => {
+  //   if (user) {
+  //     const route = user.role == "ADMIN" ? "/admin" : "/home";
+  //     console.log("route", route);
+  //     navigate(route, { replace: true });
+  //   }
+  // }, [user]);
+
+  // toda vez que entrar verifica se já possui um token
+  // pq se tiver só redireciona pra pagina correta
 
   const handleNavigate = () => {
     navigate("/register", { replace: true });
@@ -30,16 +43,15 @@ const LoginPage = () => {
     };
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        user,
-        { headers: { "Content-Type": "application/json" } },
-      );
+      if (!user) return;
+
+      const response = await loginUser(user);
+
+      console.log("response", response);
 
       if (response.status === 200) {
-        navigate("/home");
-      } else {
-        console.log("err", response);
+        login(response.data);
+        navigate("/home", { replace: true });
       }
     } catch (err) {
       console.log("err", err);
@@ -53,7 +65,7 @@ const LoginPage = () => {
         onSubmit={handleSubmit}
       >
         <div className='mx-auto mb-4'>
-          <img src='../public/logo.png' alt='Logo' />
+          <img src='/logo.png' alt='Logo' />
         </div>
 
         <Input
