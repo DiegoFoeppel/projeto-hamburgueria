@@ -4,11 +4,14 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import UserContext from "./context/UserContext";
-import AdminPage from "./pages/AdminPage";
+import AdminPage from "./pages/OrdersPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { PublicOnlyRoute } from "./auth/PublicRoute";
+import { useState } from "react";
 
 function App() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <UserContext>
       <Routes>
@@ -20,14 +23,14 @@ function App() {
           <Route path='register' element={<RegisterPage />} />
         </Route>
 
-        <Route
+        {/* <Route
           path='admin'
           element={
             <ProtectedRoute>
               <AdminPage />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         <Route
           path='pedidos'

@@ -17,7 +17,7 @@ const iconStyle = {
   plus: "h-8.75 w-8.75 flex justify-center items-center border-2 rounded-md border-bege cursor-pointer text-bege",
 };
 
-const AdminIcons = () => {
+const AdminIcons = ({ onAdd }) => {
   const { user, logout } = useAuth();
 
   const location = useLocation();
@@ -50,7 +50,7 @@ const AdminIcons = () => {
           <LayoutGrid />
         </NavLink>
         {/* </div> */}
-        <div className={iconStyle.plus}>
+        <div className={iconStyle.plus} onClick={onAdd}>
           <Plus />
         </div>
       </div>
@@ -82,7 +82,7 @@ const UserIcons = () => {
   );
 };
 
-const Header = () => {
+const Header = ({ onOpen, onAdd }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -93,7 +93,7 @@ const Header = () => {
           <img src='/logo.png' alt='Logo' />
         </Link>
 
-        {user && user.role === "ADMIN" && <AdminIcons />}
+        {user && user.role === "ADMIN" && <AdminIcons onAdd={onAdd} />}
 
         {user && user.role === "USER" && <UserIcons />}
 
