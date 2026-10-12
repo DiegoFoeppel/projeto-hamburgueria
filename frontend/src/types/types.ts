@@ -21,7 +21,7 @@ export type Menu = {
 };
 
 export type Product = {
-  id: number;
+  id?: number;
   name: string;
   category: string;
   description: string;

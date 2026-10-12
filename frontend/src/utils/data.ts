@@ -5,9 +5,9 @@ export const opcoesCategorias = [
 ];
 
 export const opcoesPedidos = [
-  { id: 1, label: "Pendentes", value: "pendentes" },
-  { id: 2, label: "Retirados", value: "retirados" },
-  { id: 3, label: "Cancelados", value: "cancelados" },
+  { id: 1, category: "Pendentes" },
+  { id: 2, category: "Retirados" },
+  { id: 3, category: "Cancelados" },
 ];
 
 export const menu = [
