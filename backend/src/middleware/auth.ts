@@ -10,6 +10,7 @@ export interface JwtPayload {
   email: string;
   nome: string;
   cep: string;
+  role: "ADMIN" | "USER";
 }
 
 export const authMiddleware = (
@@ -26,6 +27,8 @@ export const authMiddleware = (
     }
 
     const payload = jwt.verify(token, process.env.JWT_SECRET!);
+
+    console.log("payload", payload);
 
     req.user = payload as JwtPayload;
     next();
