@@ -102,6 +102,40 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 
+export const editProduct = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+
+    console.log("Id", id, req.params, req.query);
+    console.log("data", data);
+
+    if (!id) {
+      return res.status(400).json({ message: "provide the product id" });
+    }
+
+    if (!data) {
+      return res.status(400).json({ message: "provide the product data" });
+    }
+
+    const [product] = await db
+      .select()
+      .from(productsTable)
+      .where(eq(productsTable.id, id));
+
+    if (!product) {
+      return res.status(400).json({ message: "product doesnt exist" });
+    }
+
+    await db.update(productsTable).set(data).where(eq(productsTable.id, id));
+
+    return res.status(200).json({ product });
+  } catch (error) {
+    console.error("Error on updating product", error);
+    return res.status(500).json({ error: "Error on updating product" });
+  }
+};
+
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
