@@ -7,42 +7,33 @@ import UserContext from "./context/UserContext";
 import AdminPage from "./pages/OrdersPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { PublicOnlyRoute } from "./auth/PublicRoute";
-import { useState } from "react";
+import CartContext from "./context/CartContex";
 
 function App() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
     <UserContext>
-      <Routes>
-        <Route index path='/' element={<HomePage />} />
-        <Route path='home' element={<HomePage />} />
+      <CartContext>
+        <Routes>
+          <Route index path='/' element={<HomePage />} />
+          <Route path='home' element={<HomePage />} />
 
-        <Route element={<PublicOnlyRoute />}>
-          <Route path='login' element={<LoginPage />} />
-          <Route path='register' element={<RegisterPage />} />
-        </Route>
+          <Route element={<PublicOnlyRoute />}>
+            <Route path='login' element={<LoginPage />} />
+            <Route path='register' element={<RegisterPage />} />
+          </Route>
 
-        {/* <Route
-          path='admin'
-          element={
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        /> */}
+          <Route
+            path='pedidos'
+            element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path='pedidos'
-          element={
-            <ProtectedRoute>
-              <AdminPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route path='profile' element={<UserProfile />} />
-      </Routes>
+          <Route path='profile' element={<UserProfile />} />
+        </Routes>
+      </CartContext>
     </UserContext>
   );
 }

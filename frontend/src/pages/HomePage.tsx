@@ -54,20 +54,6 @@ const HomePage = () => {
 
   const handleSelectedProduct = (id: number) => {};
 
-  // const handleEdit = async (product: Product) => {
-  //   try {
-  //     if (!product) return;
-
-  //     const response = await editProduct(product, token);
-
-  //     console.log("response", response);
-
-  //     fetchData();
-  //   } catch (err) {
-  //     console.log("err", err);
-  //   }
-  // };
-
   useEffect(() => {
     fetchData();
   }, []);

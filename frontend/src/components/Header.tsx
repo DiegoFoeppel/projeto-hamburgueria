@@ -8,6 +8,9 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { useContext, useState } from "react";
+import Cart from "./Cart";
+import { useCart } from "../hooks/useCart";
 
 const iconStyle = {
   default:
@@ -17,8 +20,10 @@ const iconStyle = {
   plus: "h-8.75 w-8.75 flex justify-center items-center border-2 rounded-md border-bege cursor-pointer text-bege",
 };
 
-const AdminIcons = ({ onAdd }) => {
+const HeaderIcons = ({ onAdd, onCart }) => {
   const { user, logout } = useAuth();
+
+  const { qtdProd } = useCart();
 
   const location = useLocation();
 
@@ -32,32 +37,36 @@ const AdminIcons = ({ onAdd }) => {
     return isActive ? iconStyle.selected : iconStyle.default;
   };
 
+  const isAdmin = user?.role === "ADMIN";
+
   return (
     <div className='flex flex-row gap-10 items-center'>
-      <div className='flex gap-2'>
-        {/* <div className={getHeaderStyle("home")}> */}
-        {/* <Link to='/home'>
+      {isAdmin && (
+        <div className='flex gap-2'>
+          {/* <div className={getHeaderStyle("home")}> */}
+          {/* <Link to='/home'>
           </Link> */}
-        <NavLink to='/home' className={({ isActive }) => checkLink(isActive)}>
-          <Box />
-        </NavLink>
-        {/* </div> */}
-        {/* <div className={getHeaderStyle("pedidos")}> */}
-        <NavLink
-          to='/pedidos'
-          className={({ isActive }) => checkLink(isActive)}
-        >
-          <LayoutGrid />
-        </NavLink>
-        {/* </div> */}
-        <div className={iconStyle.plus} onClick={onAdd}>
-          <Plus />
+          <NavLink to='/home' className={({ isActive }) => checkLink(isActive)}>
+            <Box />
+          </NavLink>
+          {/* </div> */}
+          {/* <div className={getHeaderStyle("pedidos")}> */}
+          <NavLink
+            to='/pedidos'
+            className={({ isActive }) => checkLink(isActive)}
+          >
+            <LayoutGrid />
+          </NavLink>
+          {/* </div> */}
+          <div className={iconStyle.plus} onClick={onAdd}>
+            <Plus />
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className='relative '>
+      <div className='relative cursor-pointer' onClick={onCart}>
         <div className='h-5 w-5 absolute rounded-full flex gap-2 justify-center items-center -top-3 -right-3 bg-bege'>
-          1
+          {qtdProd}
         </div>
         <ShoppingCart size={18} color='white' />
       </div>
@@ -72,19 +81,15 @@ const AdminIcons = ({ onAdd }) => {
   );
 };
 
-const UserIcons = () => {
-  return (
-    <div>
-      <Box />
-      <LayoutGrid />
-      <Plus />
-    </div>
-  );
-};
-
 const Header = ({ onOpen, onAdd }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const handleModal = () => {
+    setIsCartOpen((prev) => !prev);
+  };
 
   return (
     <div className='w-full md:w-[737px] h-full md:h-[86px] mx-auto py-2 '>
@@ -92,11 +97,10 @@ const Header = ({ onOpen, onAdd }) => {
         <Link to='/home'>
           <img src='/logo.png' alt='Logo' />
         </Link>
-
-        {user && user.role === "ADMIN" && <AdminIcons onAdd={onAdd} />}
-
-        {user && user.role === "USER" && <UserIcons />}
-
+        <HeaderIcons onAdd={onAdd} onCart={handleModal} />
+        {/* )} */}
+        {isCartOpen && <Cart onClose={handleModal} />}
+        {/* {user && user.role === "USER" && <UserIcons />} */}
         {!user && (
           <Link
             to='/login'
