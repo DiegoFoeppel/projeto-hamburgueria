@@ -10,6 +10,13 @@ export const opcoesPedidos = [
   { id: 3, category: "Cancelados" },
 ];
 
+export const formatPrice = (price: string | number) => {
+  return Number(price).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+};
+
 export const menu = [
   {
     id: 1,
@@ -25,7 +32,6 @@ export const menu = [
         price: 28.9,
       },
       {
-        id: 25116,
         name: "CALABRESA ESPECIAL",
         description:
           "Hambúrguer de carne bovina coberto com linguiça calabresa fatiada, cebola caramelizada e muçarela derretida.",
