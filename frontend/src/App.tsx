@@ -7,7 +7,7 @@ import UserContext from "./context/UserContext";
 import AdminPage from "./pages/OrdersPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { PublicOnlyRoute } from "./auth/PublicRoute";
-import CartContext from "./context/CartContex";
+import CartContext from "./context/CartContext";
 
 function App() {
   return (

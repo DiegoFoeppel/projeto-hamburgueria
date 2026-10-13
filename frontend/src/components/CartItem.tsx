@@ -1,6 +1,6 @@
 import { Minus, Plus, Trash } from "lucide-react";
 import React, { useContext } from "react";
-import CartContext, { CartProductsContext } from "../context/CartContex";
+import CartContext, { CartProductsContext } from "../context/CartContext";
 import { useCart } from "../hooks/useCart";
 import { formatPrice } from "../utils/data";
 

@@ -4,7 +4,7 @@ import { deleteProduct } from "../services/productsService";
 import { useContext } from "react";
 import { AuthContext } from "../context/UserContext";
 import { useAuth } from "../hooks/useAuth";
-import CartContext, { CartProductsContext } from "../context/CartContex";
+import CartContext, { CartProductsContext } from "../context/CartContext";
 import { useCart } from "../hooks/useCart";
 import toast from "react-hot-toast";
 import { formatPrice } from "../utils/data";

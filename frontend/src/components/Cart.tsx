@@ -1,7 +1,7 @@
 import { Minus, Plus, Trash, X } from "lucide-react";
 import React, { useCallback, useContext } from "react";
 import Button from "./Button";
-import { CartProductsContext } from "../context/CartContex";
+import { CartProductsContext } from "../context/CartContext";
 import CartItem from "./CartItem";
 import { useCart } from "../hooks/useCart";
 
