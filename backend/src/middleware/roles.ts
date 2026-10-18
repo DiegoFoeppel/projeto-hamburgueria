@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import type { AuthenticatedRequest } from "./auth";
+import type { AuthenticatedRequest, JwtPayload } from "./auth";
 import { usersTable } from "../db/schema";
 import db from "../db";
 import { eq } from "drizzle-orm";
-// import jwt from "jsonwebtoken";
+import { getUser } from "../db/queries";
 
 export const authorizationMiddleware = async (
   req: AuthenticatedRequest,
@@ -16,18 +16,7 @@ export const authorizationMiddleware = async (
     console.log("Id", id, typeof id);
     console.log("user");
 
-    const [user] = await db
-      .select({
-        id: usersTable.id,
-        email: usersTable.email,
-        nome: usersTable.nome,
-        cep: usersTable.cep,
-        role: usersTable.role,
-      })
-      .from(usersTable)
-      .where(eq(usersTable.id, Number(id)));
-
-    console.log("user", user);
+    const user = await getUser(Number(id));
 
     if (!user || !(user.role === "ADMIN")) {
       return res.status(401).json({ error: "Access denied" });
