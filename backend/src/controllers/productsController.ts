@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import db from "../db/index.js";
-import { productsTable, usersTable } from "../db/schema.js";
+import { categories, productsTable, usersTable } from "../db/schema.js";
 import { getUser } from "../utils.js";
 import bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
@@ -10,16 +10,24 @@ export const getProducts = async (req: Request, res: Response) => {
   try {
     // tem que agrupar pela categoria
 
-    const products = await db.select().from(productsTable);
+    // const products = await db.select().from(productsTable);
 
-    const groups = Object.groupBy(products, (obj) => obj.category);
+    // console.log("groups", products);
 
-    const agrupados = Object.entries(groups).map(([category, products]) => ({
-      category,
-      products,
-    }));
+    // const groups = Object.groupBy(products, (obj) => obj.category);
 
-    return res.status(200).json({ products: agrupados });
+    // console.log("groups", groups);
+    // const agrupados = Object.entries(groups).map(([category, products]) => ({
+    //   category,
+    //   products,
+    // }));
+
+    const menu = await db.query.categories.findMany({
+      orderBy: { sortOrder: "asc" },
+      with: { products: true },
+    });
+
+    return res.status(200).json({ menu });
   } catch (err) {
     return res.status(500).json({ error: err });
   }
@@ -73,11 +81,15 @@ export const createProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, category, price, imgUrl } = req.body;
+    const { name, description, category, price } = req.body;
+    const image = req.file;
 
-    if (!name || !description || !price || !imgUrl) {
+    if (!name || !description || !price || !image) {
       return res.status(400).json({ message: "all fields must be filled" });
     }
+
+    const productImage = image?.originalname;
+    console.log("productName", image, productImage);
 
     const [product] = await db
       .select()
@@ -93,7 +105,7 @@ export const createProduct = async (req: Request, res: Response) => {
       description,
       category,
       price,
-      imgUrl,
+      imgUrl: productImage,
     });
 
     return res.status(201).json({ productCreated });

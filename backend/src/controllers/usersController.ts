@@ -97,19 +97,19 @@ export const createUser = async (req: Request, res: Response) => {
 export const editUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
-    const { password, cep, nome } = req.body;
+    const { nome, cep } = req.body;
 
     if (!id) {
       return res.status(400).json({ message: "provide user id" });
     }
 
-    const user = await getUser(id);
+    const user = await getUser(Number(id));
 
     if (!user) {
       return res.status(400).json({ message: "all fields must be filled" });
     }
 
-    return res.status(200).json({ message: "user was deleted" });
+    return res.status(200).json({ message: "user was updated" });
   } catch (error) {
     console.error("Error on editing user", error);
     return res.status(500).json({ error: "Error on editing user" });
