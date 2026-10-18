@@ -32,7 +32,10 @@ const CartContext = ({ children }: { children: ReactNode }) => {
     JSON.parse(localStorage.getItem("cart")) ?? [],
   );
 
-  const qtdProd = cartProducts.length;
+  // na vdd reduce baseado na qtd de cada elemento
+  const qtdProd = cartProducts.reduce((qtdTotal, produto) => {
+    return produto.qtd + qtdTotal;
+  }, 0);
 
   useEffect(() => {
     saveToLocalStorage();

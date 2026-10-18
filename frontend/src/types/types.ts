@@ -11,19 +11,31 @@ export interface LoginCredentials {
 }
 
 export type Filter = {
-  id: number;
-  category: string;
+  id: string;
+  name: string;
 };
 
 export type Menu = {
-  category: string;
+  id: string;
+  name: string;
+  sortOrder: number;
   products: Product[];
+};
+
+export type OrderItem = {
+  id: string;
+  orderId: string;
+  productId: number;
+  quantity: number;
+  price: number;
+  productName: string;
 };
 
 export type Product = {
   id?: number;
   name: string;
   category: string;
+  categoryId: string;
   description: string;
   imgUrl: string;
   price: number;
@@ -37,7 +49,8 @@ export interface Pedido {
   status: OrderStatus;
   client: string;
   date: string; // Formato DD/MM/YYYY
-  orderDate: string; // Formato HH:mm
+  createdAt: string; // Formato HH:mm
   orderFinishDate?: string; // Formato HH:mm ou null
   total: number;
+  items: OrderItem[];
 }

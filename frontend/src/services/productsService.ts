@@ -4,7 +4,7 @@ import type { Product, User } from "../types/types";
 export const getProducts = async () => {
   const response = await api.get("/api/products");
 
-  return response.data.products;
+  return response.data.menu;
 };
 
 export const createProduct = async (product: Product, token: string) => {
