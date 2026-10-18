@@ -4,10 +4,10 @@ import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import UserProfile from "./pages/UserProfile";
 import UserContext from "./context/UserContext";
-import AdminPage from "./pages/OrdersPage";
-import ProtectedRoute from "./auth/ProtectedRoute";
+
 import { PublicOnlyRoute } from "./auth/PublicRoute";
 import CartContext from "./context/CartContext";
+import OrdersPage from "./pages/OrdersPage";
 
 function App() {
   return (
@@ -22,14 +22,16 @@ function App() {
             <Route path='register' element={<RegisterPage />} />
           </Route>
 
-          <Route
+          <Route path='pedidos' element={<OrdersPage />} />
+
+          {/* <Route
             path='pedidos'
             element={
               <ProtectedRoute>
                 <AdminPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
 
           <Route path='profile' element={<UserProfile />} />
         </Routes>

@@ -10,6 +10,7 @@ import {
 } from "../services/productsService";
 import type { Menu, Product } from "../types/types";
 import CommonSection from "../components/CommonSection";
+import { getCategories } from "../services/categoriesService";
 
 type ModalMode = "edit" | "create";
 
@@ -19,6 +20,7 @@ const HomePage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalMode, setModalMode] = useState<ModalMode>("create");
+  const [categories, setCategories] = useState([]);
 
   const handleOpen = () => {
     setIsOpen((prev) => !prev);
@@ -31,6 +33,18 @@ const HomePage = () => {
       const products = await getProducts();
 
       setMenu(products);
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
+
+  console.log("menu", menu);
+
+  const fetchCategories = async () => {
+    try {
+      const categories = await getCategories();
+
+      setCategories(categories);
     } catch (err) {
       console.log("err", err);
     }
@@ -56,21 +70,17 @@ const HomePage = () => {
 
   useEffect(() => {
     fetchData();
+    fetchCategories();
   }, []);
 
   const onSelectFiltro = (value: string) => {
     setFiltro(filtro === value ? null : value);
   };
 
-  const filteredData =
-    menu.length > 0 && filtro
-      ? menu.filter((p) => p.category === filtro)
-      : menu;
+  console.log("filtro", filtro);
+  const visible = filtro ? menu.filter((p) => p.id === filtro) : menu;
 
-  const categories =
-    menu.length > 0
-      ? menu.map((p, i) => ({ id: i, category: p.category }))
-      : [];
+  console.log("filtro", visible);
 
   const handleEditClick = (id) => {
     handleOpen();
@@ -102,6 +112,7 @@ const HomePage = () => {
 
       <CommonSection
         // onOpen={handleOpen}
+        onClick={onSelectFiltro}
         opcoes={categories}
         filtro={filtro}
         onAdd={onAdd}
@@ -114,7 +125,7 @@ const HomePage = () => {
         // onClose={() => setIsModalOpen(false)}
       />
       <Produtos
-        data={filteredData}
+        data={visible}
         onDelete={handleDelete}
         onEdit={handleEditClick}
       />
