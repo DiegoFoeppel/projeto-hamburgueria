@@ -19,7 +19,9 @@ const CommonSection = ({
   return (
     <div>
       <Header onOpen={handleOpen} onAdd={onAdd} />
+
       <Filtros opcoes={opcoes} onClick={onClick} filtro={filtro} />
+
       {isOpen && (
         <ProductModal
           onClose={onClose}

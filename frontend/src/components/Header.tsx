@@ -2,6 +2,7 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import {
   Box,
   CircleUserIcon,
+  ClipboardList,
   LayoutGrid,
   LogOutIcon,
   Plus,
@@ -64,19 +65,33 @@ const HeaderIcons = ({ onAdd, onCart }) => {
         </div>
       )}
 
-      <div className='relative cursor-pointer' onClick={onCart}>
-        <div className='h-5 w-5 absolute rounded-full flex gap-2 justify-center items-center -top-3 -right-3 bg-bege'>
-          {qtdProd}
-        </div>
-        <ShoppingCart size={18} color='white' />
-      </div>
+      {user && (
+        <>
+          <div className='flex gap-4 items-center'>
+            {/* <div className='relative cursor-pointer'> */}
+            <Link to='/pedidos'>
+              <ClipboardList color='white' size={24} />
+            </Link>
+            {/* </div> */}
 
-      <div className='flex gap-2 items-center'>
-        <span className='text-white'>{user?.nome}</span>
-        <div className='cursor-pointer' onClick={logout}>
-          <LogOutIcon size={18} color='white' />
-        </div>
-      </div>
+            <div className='relative cursor-pointer' onClick={onCart}>
+              <div className='h-5 w-5 absolute rounded-full flex gap-2 justify-center items-center -top-3 -right-3 bg-bege'>
+                {qtdProd}
+              </div>
+              <ShoppingCart size={24} color='white' />
+            </div>
+          </div>
+
+          <div className='flex gap-2 items-center'>
+            <Link to='/profile'>
+              <span className='text-white'>{user?.nome}</span>
+            </Link>
+            <div className='cursor-pointer' onClick={logout}>
+              <LogOutIcon size={24} color='white' />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -97,8 +112,9 @@ const Header = ({ onOpen, onAdd }) => {
         <Link to='/home'>
           <img src='/logo.png' alt='Logo' />
         </Link>
+
         <HeaderIcons onAdd={onAdd} onCart={handleModal} />
-        {/* )} */}
+
         {isCartOpen && <Cart onClose={handleModal} />}
         {/* {user && user.role === "USER" && <UserIcons />} */}
         {!user && (

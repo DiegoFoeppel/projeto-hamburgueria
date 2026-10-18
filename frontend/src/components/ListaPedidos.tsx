@@ -6,7 +6,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { mockPedidos } from "../utils/data";
+import { formatPrice, mockPedidos } from "../utils/data";
 
 interface ListaPedidosProps {
   data: Pedido[];
@@ -22,6 +22,7 @@ const PedidoCard = ({
   pedido,
   setPedidos,
   pedidos,
+  index,
   onChangeStatus,
 }: PedidoCardProps) => {
   const [pedidoStatus, setPedidoStatus] = useState<StatusPedido>(pedido.status);
@@ -31,10 +32,13 @@ const PedidoCard = ({
     onChangeStatus(pedido, e.target.value);
   };
 
+  const date = new Date(pedido.createdAt).toLocaleString("pt-BR").split(", ");
+  console.log("date", date);
+
   return (
     <div className='flex flex-col justify-between bg-bege rounded-md p-2'>
       <div className='flex justify-between mb-2'>
-        <span>#{pedido.id}</span>
+        <span> Pedido #{index + 1}</span>
         {/* <label for='frutas'>Escolha uma fruta:</label> */}
         <select
           id='status'
@@ -48,18 +52,31 @@ const PedidoCard = ({
         </select>
       </div>
 
+      <div className='border-2 border-gray-400 p-2 rounded-md'>
+        {pedido.items.length &&
+          pedido.items.map((p) => (
+            <p>
+              {p.quantity}x - {p.productName}
+            </p>
+          ))}
+      </div>
+
       <div className='mb-2'>
-        <div className='flex gap-2 items-center'>
+        {/* <div className='flex gap-2 items-center'>
           <User size={18} />
           <span>{pedido.client}</span>
-        </div>
+        </div> */}
+
+        {/* horario */}
+
         <div className='flex gap-2 items-center'>
           <Calendar size={18} />
-          <span>{pedido.date}</span>
+          <span>{date[0]}</span>
         </div>
+        {/* horario */}
         <div className='flex gap-2 items-center'>
           <Clock size={18} />
-          <span>{pedido.orderDate}</span>
+          <span>{date[1]}</span>
         </div>
         <div className='flex gap-2 items-center'>
           <ClockCheck size={18} />
@@ -69,32 +86,30 @@ const PedidoCard = ({
 
       <div className='color-bg border ' />
 
-      <div className='flex justify-end'>
-        <span className=''>{pedido.total}</span>
-      </div>
+      <span className=''>{formatPrice(pedido.total)}</span>
     </div>
   );
 };
 
 const ListaPedidos = ({ data }: ListaPedidosProps) => {
-  const [pedidos, setPedidos] = useState<Pedido[]>(mockPedidos);
+  // const [pedidos, setPedidos] = useState<Pedido[]>(mockPedidos);
 
-  console.log("pedidos", pedidos);
+  // console.log("pedidos", pedidos);
 
-  const onUpdatePedidos = (pedido, pedidoStatus) => {
-    setPedidos((prev) =>
-      prev.map((p) =>
-        p.id === pedido.id ? { ...p, status: pedidoStatus } : p,
-      ),
-    );
-  };
+  // const onUpdatePedidos = (pedido, pedidoStatus) => {
+  //   setPedidos((prev) =>
+  //     prev.map((p) =>
+  //       p.id === pedido.id ? { ...p, status: pedidoStatus } : p,
+  //     ),
+  //   );
+  // };
 
-  console.log("pedidos", pedidos);
+  // console.log("pedidos", pedidos);
 
   return (
-    <div className='w-[747px] mx-auto my-10 grid grid-cols-3 gap-2'>
-      {pedidos.map((p) => (
-        <PedidoCard pedido={p} onChangeStatus={onUpdatePedidos} />
+    <div className='w-[747px] mx-auto my-10 gap-2'>
+      {data.map((p, i) => (
+        <PedidoCard pedido={p} key={p.id} index={i} />
       ))}
     </div>
   );

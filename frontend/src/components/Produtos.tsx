@@ -22,8 +22,6 @@ type ProductProps = {
 const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
   const { id, name, description, imgUrl, price } = product;
 
-  console.log("price", price, typeof price);
-
   const { user } = useAuth();
 
   const { add } = useCart();
@@ -36,7 +34,12 @@ const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
   return (
     <div className='flex gap-2 my-4'>
       <div>
-        <img src={imgUrl} alt='Imagem do produto' />
+        <img
+          height={200}
+          width={166}
+          src={`http://localhost:3000/api/uploads/${imgUrl}`}
+          alt='Imagem do produto'
+        />
       </div>
       <div className='flex flex-col justify-between  w-full'>
         <div>
@@ -79,7 +82,7 @@ const Products = ({ data, onDelete, onEdit }: MenuProps) => {
   console.log("diabns", data);
   if (data.length == 0) {
     return (
-      <div>
+      <div className=' w-[747px] mx-auto my-10 flex items-center text-bege'>
         <p>Nenhum produto disponível</p>
       </div>
     );
@@ -88,8 +91,8 @@ const Products = ({ data, onDelete, onEdit }: MenuProps) => {
   return (
     <div className='w-[747px] mx-auto my-10 '>
       {data.map((category) => (
-        <div key={category.category}>
-          <h2 className='text-[#F2DAAC] mb-2'>{category.category}</h2>
+        <div key={category.id}>
+          <h2 className='text-[#F2DAAC] mb-2'>{category.name}</h2>
           {category.products.map((product: Product) => (
             <ProductItem
               key={product.id}

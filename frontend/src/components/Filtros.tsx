@@ -20,13 +20,11 @@ const Filtros = ({ opcoes, onClick, filtro }: FiltroValue) => {
       <div className='flex gap-3 my-4'>
         {opcoes.map((item: Filter) => (
           <button
-            className={
-              item.category === filtro ? style.selected : style.default
-            }
+            className={item.id === filtro ? style.selected : style.default}
             key={item.id}
-            onClick={() => onClick(item.category)}
+            onClick={() => onClick(item.id)}
           >
-            {item.category}
+            {item.name}
           </button>
         ))}
         {/* </div> */}

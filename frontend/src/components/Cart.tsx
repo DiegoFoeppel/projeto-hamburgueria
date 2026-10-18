@@ -4,9 +4,34 @@ import Button from "./Button";
 import { CartProductsContext } from "../context/CartContext";
 import CartItem from "./CartItem";
 import { useCart } from "../hooks/useCart";
+import { createOrder } from "../services/ordersService";
 
 const Cart = ({ onClose }) => {
   const { cartProducts, total, qtdProd, clearCart } = useCart();
+
+  const token = localStorage.getItem("jwt") ?? "";
+
+  const productsInfo =
+    cartProducts.length > 0
+      ? cartProducts.map((p) => ({
+          productId: p.id,
+          price: Number(p.product.price),
+          quantity: p.qtd,
+        }))
+      : [];
+
+  const handleSubmit = async () => {
+    try {
+      const teste = await createOrder(
+        { totalPrice: total, products: productsInfo },
+        token,
+      );
+
+      console.log("teste", teste);
+    } catch (err) {
+      console.log("err", err);
+    }
+  };
 
   return (
     <div
@@ -24,7 +49,11 @@ const Cart = ({ onClose }) => {
             cartProducts.map((item) => <CartItem item={item} key={item.id} />)}
         </div>
 
-        <p>Total: {total.toFixed(2)}</p>
+        <div className='flex justify-between'>
+          <p>Total Estimado</p>
+          <p>{total.toFixed(2)}</p>
+        </div>
+
         <Button
           type='submit'
           text='Limpar carrinho'
@@ -32,7 +61,12 @@ const Cart = ({ onClose }) => {
           onClick={() => clearCart()}
         />
 
-        <Button type='submit' text='Finalizar Pedido' variant='default' />
+        <Button
+          type='submit'
+          text='Finalizar Pedido'
+          variant='default'
+          onClick={handleSubmit}
+        />
       </div>
     </div>
   );
