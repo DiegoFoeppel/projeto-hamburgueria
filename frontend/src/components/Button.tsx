@@ -1,20 +1,20 @@
-const btnVariants = {
-  default:
-    "w-full p-2 border-2 border-[#C92A0E] text-sm font-bold hover:cursor-pointer hover:opacity-80 rounded mb-2 bg-[#C92A0E] text-white",
-  outline:
-    "w-full p-2 border-2 text-sm font-bold hover:cursor-pointer hover:opacity-80 rounded mb-2 bg-white text-[#C92A0E]",
-};
+import type { ButtonType } from "../types/types";
+import { btnVariants } from "../utils/data";
 
-type ButtonType = {
-  text: string;
-  onClick?: () => void;
-  variant: "default" | "outline";
-  type: "submit" | "reset" | "button" | undefined;
-};
-
-const Button = ({ text, onClick, variant = "default", type }: ButtonType) => {
+const Button = ({
+  text,
+  onClick,
+  variant = "default",
+  type,
+  disabled,
+}: ButtonType) => {
   return (
-    <button className={btnVariants[variant]} onClick={onClick} type={type}>
+    <button
+      className={btnVariants[variant]}
+      onClick={onClick}
+      type={type}
+      disabled={disabled}
+    >
       {text}
     </button>
   );

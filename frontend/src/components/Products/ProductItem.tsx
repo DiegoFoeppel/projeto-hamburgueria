@@ -1,25 +1,13 @@
 import { Edit, ShoppingCart, Trash } from "lucide-react";
-import type { Product, Menu } from "../types/types";
-import { deleteProduct } from "../services/productsService";
-import { useContext } from "react";
-import { AuthContext } from "../context/UserContext";
-import { useAuth } from "../hooks/useAuth";
-import CartContext, { CartProductsContext } from "../context/CartContext";
-import { useCart } from "../hooks/useCart";
+import type { Product, ProductProps } from "../../types/types";
+import { useAuth } from "../../context/UserContext";
+import { useCart } from "../../hooks/useCart";
 import toast from "react-hot-toast";
-import { formatPrice } from "../utils/data";
+import { formatPrice } from "../../utils/data";
+import { useProductModal } from "../../stores/productModal";
+import { useDeleteProduct } from "../../hooks/products";
 
-type MenuProps = {
-  data: Menu[];
-  onDelete: (id: number) => void;
-};
-
-type ProductProps = {
-  product: Product;
-  onDelete: (id: number) => void;
-};
-
-const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
+export const ProductItem = ({ product }: ProductProps) => {
   const { id, name, description, imgUrl, price } = product;
 
   const { user } = useAuth();
@@ -30,6 +18,10 @@ const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
     add(product);
     toast.success(`${product.name} adicionado ao carrinho!`);
   };
+
+  const openEdit = useProductModal((s) => s.openEdit);
+
+  const { mutate: del, isPending: isPendingDelete } = useDeleteProduct();
 
   return (
     <div className='flex gap-2 my-4'>
@@ -43,20 +35,20 @@ const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
       </div>
       <div className='flex flex-col justify-between  w-full'>
         <div>
-          <div className='flex justify-between'>
+          <div className='flex justify-between items-center'>
             <h3 className='text-title'>{name}</h3>
             {user && user.role === "ADMIN" && (
               <div className='flex gap-2'>
                 <Edit
                   color='#f2daac'
                   size={18}
-                  onClick={() => onEdit(id)}
+                  onClick={() => openEdit(product)}
                   className='cursor-pointer'
                 />
                 <Trash
                   color='#c92a0e'
                   size={18}
-                  onClick={() => onDelete(id)}
+                  onClick={() => del(id)}
                   className='cursor-pointer'
                 />
               </div>
@@ -77,34 +69,3 @@ const ProductItem = ({ product, onDelete, onEdit }: ProductProps) => {
     </div>
   );
 };
-
-const Products = ({ data, onDelete, onEdit }: MenuProps) => {
-  console.log("diabns", data);
-  if (data.length == 0) {
-    return (
-      <div className=' w-[747px] mx-auto my-10 flex items-center text-bege'>
-        <p>Nenhum produto disponível</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className='w-[747px] mx-auto my-10 '>
-      {data.map((category) => (
-        <div key={category.id}>
-          <h2 className='text-[#F2DAAC] mb-2'>{category.name}</h2>
-          {category.products.map((product: Product) => (
-            <ProductItem
-              key={product.id}
-              product={product}
-              onDelete={onDelete}
-              onEdit={onEdit}
-            />
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-export default Products;

@@ -1,34 +1,13 @@
-import { Calendar, Clock, ClockCheck, Hourglass, User } from "lucide-react";
-import type { Pedido, StatusPedido } from "../types/types";
-import {
-  useState,
-  type ChangeEvent,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
-import { formatPrice, mockPedidos } from "../utils/data";
+import { Calendar, Clock, ClockCheck } from "lucide-react";
+import type { OrderStatus, PedidoCardProps } from "../../types/types";
+import { useState, type ChangeEvent } from "react";
+import { formatPrice } from "../../utils/data";
 
-interface ListaPedidosProps {
-  data: Pedido[];
-}
-
-interface PedidoCardProps {
-  pedido: Pedido;
-  setPedidos: Dispatch<SetStateAction<Pedido[]>>;
-  pedidos: Pedido[];
-}
-
-const PedidoCard = ({
-  pedido,
-  setPedidos,
-  pedidos,
-  index,
-  onChangeStatus,
-}: PedidoCardProps) => {
-  const [pedidoStatus, setPedidoStatus] = useState<StatusPedido>(pedido.status);
+const PedidoCard = ({ pedido, index, onChangeStatus }: PedidoCardProps) => {
+  const [pedidoStatus, setPedidoStatus] = useState<OrderStatus>(pedido.status);
 
   const changeValue = (e: ChangeEvent<HTMLSelectElement>) => {
-    setPedidoStatus(e.target.value as StatusPedido);
+    setPedidoStatus(e.target.value as OrderStatus);
     onChangeStatus(pedido, e.target.value);
   };
 
@@ -91,28 +70,4 @@ const PedidoCard = ({
   );
 };
 
-const ListaPedidos = ({ data }: ListaPedidosProps) => {
-  // const [pedidos, setPedidos] = useState<Pedido[]>(mockPedidos);
-
-  // console.log("pedidos", pedidos);
-
-  // const onUpdatePedidos = (pedido, pedidoStatus) => {
-  //   setPedidos((prev) =>
-  //     prev.map((p) =>
-  //       p.id === pedido.id ? { ...p, status: pedidoStatus } : p,
-  //     ),
-  //   );
-  // };
-
-  // console.log("pedidos", pedidos);
-
-  return (
-    <div className='w-[747px] mx-auto my-10 gap-2'>
-      {data.map((p, i) => (
-        <PedidoCard pedido={p} key={p.id} index={i} />
-      ))}
-    </div>
-  );
-};
-
-export default ListaPedidos;
+export default PedidoCard;

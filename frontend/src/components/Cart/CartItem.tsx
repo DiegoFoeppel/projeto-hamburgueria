@@ -1,10 +1,12 @@
 import { Minus, Plus, Trash } from "lucide-react";
-import React, { useContext } from "react";
-import CartContext, { CartProductsContext } from "../context/CartContext";
-import { useCart } from "../hooks/useCart";
-import { formatPrice } from "../utils/data";
+import { useCart } from "../../hooks/useCart";
+import { formatPrice } from "../../utils/data";
 
-const CartItem = ({ item }) => {
+type CartItemProps = {
+  item: CartItem;
+};
+
+const CartItem = ({ item }: CartItemProps) => {
   const { remove, changeQuantity } = useCart();
 
   return (

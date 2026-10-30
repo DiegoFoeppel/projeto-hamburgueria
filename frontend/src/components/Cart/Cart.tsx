@@ -1,15 +1,15 @@
-import { Minus, Plus, Trash, X } from "lucide-react";
-import React, { useCallback, useContext } from "react";
-import Button from "./Button";
-import { CartProductsContext } from "../context/CartContext";
+import { X } from "lucide-react";
+import Button from "../Button";
 import CartItem from "./CartItem";
-import { useCart } from "../hooks/useCart";
-import { createOrder } from "../services/ordersService";
+import { useCart } from "../../hooks/useCart";
+import { createOrder } from "../../services/ordersService";
 
-const Cart = ({ onClose }) => {
+type CartProps = {
+  onClose: (open: boolean) => void;
+};
+
+const Cart = ({ onClose }: CartProps) => {
   const { cartProducts, total, qtdProd, clearCart } = useCart();
-
-  const token = localStorage.getItem("jwt") ?? "";
 
   const productsInfo =
     cartProducts.length > 0
@@ -22,10 +22,10 @@ const Cart = ({ onClose }) => {
 
   const handleSubmit = async () => {
     try {
-      const teste = await createOrder(
-        { totalPrice: total, products: productsInfo },
-        token,
-      );
+      const teste = await createOrder({
+        totalPrice: total,
+        products: productsInfo,
+      });
 
       console.log("teste", teste);
     } catch (err) {
@@ -41,7 +41,9 @@ const Cart = ({ onClose }) => {
       <div className='flex flex-col justify-between bg-bege shadow-xl max-w-sm w-full h-full px-4 py-2 transform transition-all'>
         <div className='flex justify-between'>
           <p>Carrinho ({qtdProd})</p>
-          <X onClick={onClose} className='cursor-pointer' />
+          <div onClick={onClose} className='cursor-pointer'>
+            <X />
+          </div>
         </div>
 
         <div className='flex-1 my-3'>
