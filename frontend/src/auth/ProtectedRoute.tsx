@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/UserContext";
 import type { ReactNode } from "react";
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {

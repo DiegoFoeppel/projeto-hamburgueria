@@ -1,8 +1,17 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export type User = {
+  id?: string;
   nome: string;
   email: string;
   cep: string;
   password: string;
+};
+
+export type UpdateUser = {
+  id?: string;
+  nome: string;
+  cep: string;
 };
 
 export interface LoginCredentials {
@@ -34,11 +43,11 @@ export type OrderItem = {
 export type Product = {
   id?: number;
   name: string;
-  category: string;
+  // category: string;
   categoryId: string;
   description: string;
   imgUrl: string;
-  price: number;
+  price: string;
   createdAt?: Date;
 };
 
@@ -53,4 +62,50 @@ export interface Pedido {
   orderFinishDate?: string; // Formato HH:mm ou null
   total: number;
   items: OrderItem[];
+}
+
+export type FiltroValue = {
+  opcoes: Filter[];
+  onClick: (value: string) => void;
+  filtro: string | null;
+};
+
+export type Category = {
+  id: string;
+  name: string;
+  sortOrder: number;
+};
+
+export type ModalMode = "edit" | "create";
+
+export type ButtonType = {
+  text: string;
+  onClick?: () => void;
+  variant: "default" | "outline";
+  type: "submit" | "reset" | "button" | undefined;
+};
+
+export type MenuProps = {
+  data: Menu[];
+};
+
+export type ProductProps = {
+  product: Product;
+};
+
+export interface ListaPedidosProps {
+  data: Pedido[];
+}
+
+export interface PedidoCardProps {
+  pedido: Pedido;
+  setPedidos: Dispatch<SetStateAction<Pedido[]>>;
+  pedidos: Pedido[];
+}
+
+export interface PedidoCardProps {
+  pedido: Pedido;
+  // setPedidos: Dispatch<SetStateAction<Pedido[]>>;
+  // pedidos: Pedido[];
+  index: number;
 }

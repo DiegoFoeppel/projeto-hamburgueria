@@ -5,10 +5,32 @@ export const opcoesCategorias = [
 ];
 
 export const opcoesPedidos = [
-  { id: 1, category: "Pendentes" },
-  { id: 2, category: "Retirados" },
-  { id: 3, category: "Cancelados" },
+  { id: "1", name: "Pendentes" },
+  { id: "2", name: "Retirados" },
+  { id: "3", name: "Cancelados" },
 ];
+
+export const filterBtnStyle = {
+  selected:
+    "cursor-pointer bg-[#F2DAAC] text-black rounded-[5px] w-[135px] h-[35px] border",
+  default:
+    "cursor-pointer bg-bg text-bege rounded-[5px] w-[135px] h-[35px] border",
+};
+
+export const iconStyle = {
+  default:
+    "h-9 w-9 flex justify-center items-center border-2 rounded-md border-bege cursor-pointer text-bege bg-black",
+  selected:
+    "h-9 w-9 flex justify-center items-center border-2 rounded-md border-bege cursor-pointer bg-bege text-black",
+  plus: "h-8.75 w-8.75 flex justify-center items-center border-2 rounded-md border-bege cursor-pointer text-bege",
+};
+
+export const btnVariants = {
+  default:
+    "w-full p-2 border-2 border-[#C92A0E] text-sm font-bold hover:cursor-pointer hover:opacity-80 rounded mb-2 bg-[#C92A0E] text-white",
+  outline:
+    "w-full p-2 border-2 text-sm font-bold hover:cursor-pointer hover:opacity-80 rounded mb-2 bg-white text-[#C92A0E]",
+};
 
 export const formatPrice = (price: string | number) => {
   return Number(price).toLocaleString("pt-BR", {
