@@ -7,34 +7,29 @@ export const getProducts = async () => {
   return response.data.menu;
 };
 
-export const createProduct = async (product: Product, token: string) => {
-  const response = await api.post(`/api/products/`, product, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const getProductById = async (id: string) => {
+  const response = await api.get("/api/products/${id}");
+
+  return response.data.menu;
+};
+
+export const createProduct = async (product: Product) => {
+  console.log("product", product);
+  const response = await api.post(`/api/products/`, product);
+  console.log("response", response);
   return response.data;
 };
 
-export const editProduct = async (
-  productId: number,
-  product: Product,
-  token: string,
-) => {
-  const response = await api.patch(`/api/products/${productId}`, product, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const editProduct = async ({
+  id,
+  ...body
+}: Partial<Product> & { id: number }) => {
+  const response = await api.patch(`/api/products/${id}`, body);
   return response.data;
 };
 
-export const deleteProduct = async (id: number, token: string) => {
-  const response = await api.delete(`/api/products/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const deleteProduct = async (id: number) => {
+  const response = await api.delete(`/api/products/${id}`);
 
   return response.data.removedProduct;
 };
