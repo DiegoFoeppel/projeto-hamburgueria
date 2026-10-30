@@ -95,21 +95,32 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const editUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { nome, cep } = req.body;
+
+  console.log("req", req.query, req.body);
+  if (!id) {
+    return res.status(400).json({ message: "provide user id" });
+  }
+
   try {
-    const { id } = req.query;
-    const { nome, cep } = req.body;
-
-    if (!id) {
-      return res.status(400).json({ message: "provide user id" });
-    }
-
     const user = await getUser(Number(id));
 
     if (!user) {
       return res.status(400).json({ message: "all fields must be filled" });
     }
 
-    return res.status(200).json({ message: "user was updated" });
+    const [updated] = await db
+      .update(usersTable)
+      .set({ nome, cep })
+      .where(eq(usersTable.id, id))
+      .returning({ id: usersTable.id });
+
+    if (!updated) {
+      return res.status(500).json({ message: "deu ruim na hora de atualizar" });
+    }
+
+    return res.status(200).json(updated);
   } catch (error) {
     console.error("Error on editing user", error);
     return res.status(500).json({ error: "Error on editing user" });

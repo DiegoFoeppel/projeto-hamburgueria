@@ -81,10 +81,13 @@ export const createProducts = async (req: Request, res: Response) => {
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
-    const { name, description, category, price } = req.body;
-    const image = req.file;
+    const { name, description, categoryId, price } = req.body;
 
-    if (!name || !description || !price || !image) {
+    console.log("req", req.body);
+    const image = req.file;
+    console.log("req", req.file);
+
+    if (!name || !description || !categoryId || !price || !image) {
       return res.status(400).json({ message: "all fields must be filled" });
     }
 
@@ -103,7 +106,7 @@ export const createProduct = async (req: Request, res: Response) => {
     const productCreated = await db.insert(productsTable).values({
       name,
       description,
-      category,
+      categoryId,
       price,
       imgUrl: productImage,
     });
