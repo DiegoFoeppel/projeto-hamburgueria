@@ -1,6 +1,6 @@
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { createUser } from "../services/usersService";
 import type { User } from "../types/types";

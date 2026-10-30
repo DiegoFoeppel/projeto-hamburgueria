@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import { Link, useNavigate } from "react-router";
-import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../context/UserContext";
 import type { LoginCredentials } from "../types/types";
 import { loginUser } from "../services/authService";
 
@@ -13,27 +12,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
 
   const { login, user } = useAuth();
-
   const navigate = useNavigate();
 
-  console.log("login", user);
-
-  // useEffect(() => {
-  //   if (user) {
-  //     const route = user.role == "ADMIN" ? "/admin" : "/home";
-  //     console.log("route", route);
-  //     navigate(route, { replace: true });
-  //   }
-  // }, [user]);
-
-  // toda vez que entrar verifica se já possui um token
-  // pq se tiver só redireciona pra pagina correta
-
-  const handleNavigate = () => {
-    navigate("/register", { replace: true });
-  };
-
-  console.log("email", email, password);
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 

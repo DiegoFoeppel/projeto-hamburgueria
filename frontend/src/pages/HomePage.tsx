@@ -1,77 +1,49 @@
-import React, { useContext, useEffect, useState } from "react";
-import Header from "../components/Header";
+import { useState } from "react";
+import Produtos from "../components/Products/Produtos";
+// import { deleteProduct } from "../services/productsService";
+// import type { ModalMode, Product } from "../types/types";
+import { useCategoriesQuery } from "../hooks/useCategories";
+import { useProductsQuery } from "../hooks/useProducts";
 import Filtros from "../components/Filtros";
-import Produtos from "../components/Produtos";
-import { menu, opcoesCategorias } from "../utils/data";
-import {
-  deleteProduct,
-  editProduct,
-  getProducts,
-} from "../services/productsService";
-import type { Menu, Product } from "../types/types";
-import CommonSection from "../components/CommonSection";
-import { getCategories } from "../services/categoriesService";
-
-type ModalMode = "edit" | "create";
 
 const HomePage = () => {
   const [filtro, setFiltro] = useState<string | null>(null);
-  const [menu, setMenu] = useState<Menu[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [modalMode, setModalMode] = useState<ModalMode>("create");
-  const [categories, setCategories] = useState([]);
+  // const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
+  // const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  // const [modalMode, setModalMode] = useState<ModalMode>("create");
 
-  const token = localStorage.getItem("jwt") ?? "";
+  // const handleOpen = () => {
+  //   setIsOpen((prev) => !prev);
+  // };
 
-  const fetchData = async () => {
-    try {
-      const products = await getProducts();
+  const {
+    data: categories = [],
+    isLoading: isLoadingCategories,
+    error: categoriesError,
+  } = useCategoriesQuery();
 
-      setMenu(products);
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
+  const {
+    data: menu = [],
+    isLoading: isLoadingMenu,
+    error: menuError,
+  } = useProductsQuery();
 
-  console.log("menu", menu);
+  // const handleDelete = async (id: number) => {
+  //   try {
+  //     if (!id) return;
 
-  const fetchCategories = async () => {
-    try {
-      const categories = await getCategories();
+  //     const response = await deleteProduct(id);
 
-      setCategories(categories);
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
+  //     console.log("response", response);
 
-  console.log("IsOpen", isOpen);
+  //     // fetchData();
+  //   } catch (err) {
+  //     console.log("err", err);
+  //   }
+  // };
 
-  const handleDelete = async (id: number) => {
-    try {
-      if (!id) return;
-
-      const response = await deleteProduct(id, token);
-
-      console.log("response", response);
-
-      fetchData();
-    } catch (err) {
-      console.log("err", err);
-    }
-  };
-
-  const handleSelectedProduct = (id: number) => {};
-
-  useEffect(() => {
-    fetchData();
-    fetchCategories();
-  }, []);
+  // const handleSelectedProduct = (id: number) => {};
 
   const onSelectFiltro = (value: string) => {
     setFiltro(filtro === value ? null : value);
@@ -80,37 +52,44 @@ const HomePage = () => {
   console.log("filtro", filtro);
   const visible = filtro ? menu.filter((p) => p.id === filtro) : menu;
 
-  console.log("filtro", visible);
+  // console.log("filtro", visible);
 
-  const handleEditClick = (id) => {
-    handleOpen();
-    const product = menu
-      .flatMap((group) => group.products)
-      .find((p) => p.id === id);
+  // const handleEditClick = (id) => {
+  //   handleOpen();
+  //   const product = menu
+  //     .flatMap((group) => group.products)
+  //     .find((p) => p.id === id);
 
-    if (!product) {
-      console.log("deu ruim");
-      return;
-    }
+  //   if (!product) {
+  //     console.log("deu ruim");
+  //     return;
+  //   }
 
-    console.log("product t", product);
+  //   console.log("product t", product);
 
-    setSelectedProduct(product);
-    setModalMode("edit");
-  };
+  //   // setSelectedProduct(product);
+  //   // setModalMode("edit");
+  // };
 
-  const onAdd = () => {
-    handleOpen();
-    setModalMode("create");
-  };
+  // const onAdd = () => {
+  //   handleOpen();
+  //   // setModalMode("create");
+  // };
 
   return (
     <>
-      {/* <Header /> */}
-      {/* <Filtros opcoes={categories} onClick={onSelectFiltro} filtro={filtro} /> */}
-      {/* {isModalOpen && <ProductModal onClose={() => setIsModalOpen(false)} />} */}
+      <Filtros opcoes={categories} onClick={onSelectFiltro} filtro={filtro} />
+      <Produtos
+        data={visible}
+        // // onDelete={handleDelete}
+        // onEdit={handleEditClick}
+      />
+    </>
+  );
+};
 
-      <CommonSection
+{
+  /* <CommonSection
         // onOpen={handleOpen}
         onClick={onSelectFiltro}
         opcoes={categories}
@@ -121,16 +100,9 @@ const HomePage = () => {
         onClose={handleOpen}
         mode={modalMode}
         product={selectedProduct}
-        fetchData={fetchData}
+        // fetchData={fetchData}
         // onClose={() => setIsModalOpen(false)}
-      />
-      <Produtos
-        data={visible}
-        onDelete={handleDelete}
-        onEdit={handleEditClick}
-      />
-    </>
-  );
-};
+      /> */
+}
 
 export default HomePage;

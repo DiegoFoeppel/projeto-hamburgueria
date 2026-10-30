@@ -1,56 +1,78 @@
-import { useEffect, useState } from "react";
-import Header from "../components/Header";
+import { useState } from "react";
 import Input from "../components/Input";
-import { useAuth } from "../hooks/useAuth";
-import { User } from "lucide-react";
+import { useAuth } from "../context/UserContext";
 import Button from "../components/Button";
+import { useUpdateUser } from "../hooks/users";
 
-const UserProfile = () => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [cep, setCep] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
+export function ProfileForm() {
   const { user } = useAuth();
 
-  const resetForm = () => {
-    setEmail("");
-    setCep("");
-    setName("");
+  // 1. Só renderiza ou inicializa os estados quando o usuário estiver carregado
+  if (!user) {
+    return <div>Carregando dados do usuário...</div>; // Ou um esqueleto/spinner
+  }
+
+  return <UserProfile user={user} />;
+}
+
+const UserProfile = ({ user }) => {
+  const [nome, setNome] = useState(user?.nome || "");
+  const [cep, setCep] = useState(user?.cep || "");
+
+  const { mutate: update, isPending, error, isSuccess } = useUpdateUser();
+  console.log("use", useUpdateUser());
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    const data = {
+      id: user.id,
+      nome,
+      cep,
+    };
+
+    if (!data) return;
+
+    update(data);
+    // toast.success("Deu certo");
   };
-
-  console.log("user", user);
-
-  useEffect(() => {
-    if (user) {
-      setName(user.nome);
-      setEmail(user.email);
-      setCep(user.cep);
-    }
-  }, [user]);
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <div className='flex w-full md:w-[737px] h-full md:h-[86px] mx-auto my-4 py-2 justify-center'>
-        <form className='flex flex-col'>
-          <label htmlFor='' className='text-white mb-1'>
+        <form className='flex flex-col' onSubmit={onSubmit}>
+          <label htmlFor='name' className='text-white mb-1'>
             Nome
           </label>
-          <Input value={name} />
+          <Input
+            value={nome}
+            id='name'
+            onChange={(e) => setNome(e.target.value)}
+          />
 
-          <label htmlFor='' className='text-white mb-1'>
+          <label htmlFor='email' className='text-white mb-1'>
             Email
           </label>
-          <Input disabled value={email} />
+          <Input disabled value={user?.email} readOnly id='email' />
 
-          <label htmlFor='' className='text-white mb-1'>
+          <label htmlFor='cep' className='text-white mb-1'>
             Cep
           </label>
-          <Input type='text' value={cep} />
+          <Input
+            type='text'
+            value={cep}
+            id='cep'
+            onChange={(e) => setCep(e.target.value)}
+          />
 
           <div className='mb-2'></div>
-          <Button type='submit' text='Editar informações' variant='default' />
+          <Button
+            type='submit'
+            text={isPending ? "Editando..." : "Editar informações"}
+            variant='default'
+            disabled={isPending}
+          />
         </form>
       </div>
     </>
