@@ -1,11 +1,9 @@
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, type ReactNode } from "react";
 import { getMe } from "../services/authService";
-import { replace, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { TOKEN_KEY } from "../api/axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useUser } from "../hooks/users";
 
 interface AuthContextType {
   user: User | null;
@@ -31,52 +29,49 @@ type User = {
   role: "USER" | "ADMIN";
 };
 
-const UserContext = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+const UserProvider = ({ children }: { children: ReactNode }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("jwt");
-      setIsLoading(true);
+  const hasToken = !!localStorage.getItem(TOKEN_KEY);
 
-      try {
-        if (!token) return;
+  // const { data: user, isLoading } = useQuery({
+  //   queryKey: ["me"],
+  //   queryFn: getMe,
+  //   enabled: hasToken, // sem token, nem tenta
+  //   retry: false,
+  // });
 
-        const response = await getMe(token);
+  const { data: user, isLoading } = useUser(hasToken);
 
-        console.log("response", response);
-        setUser(response);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const login = ({ user, token }: { user: User; token: string }) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    queryClient.setQueryData(["user"], user); // já preenche o user, sem nova requisição
+  };
 
   const logout = () => {
-    localStorage.setItem("jwt", "");
-    setUser(null);
+    localStorage.removeItem(TOKEN_KEY);
+    queryClient.clear(); // limpa o cache do usuário anterior
     navigate("/home", { replace: true });
   };
 
-  const login = (info: LoginUser) => {
-    const token = info.token;
-    console.log("token", token);
-    localStorage.setItem("jwt", token);
-    setUser(info.user);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+    <AuthContext.Provider
+      value={{ user: user ?? null, isLoading, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export default UserContext;
+export function useAuth() {
+  const context = useContext(AuthContext);
+
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+
+  return context;
+}
+
+export default UserProvider;

@@ -1,11 +1,5 @@
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { Product } from "../types/types";
-import { useAuth } from "../hooks/useAuth";
 
 type ProductsList = {
   id?: number;
@@ -29,7 +23,7 @@ export const CartProductsContext = createContext<CartContextType | undefined>(
 
 const CartContext = ({ children }: { children: ReactNode }) => {
   const [cartProducts, setCartProducts] = useState<ProductsList[]>(
-    JSON.parse(localStorage.getItem("cart")) ?? [],
+    JSON.parse(localStorage.getItem("cart") ?? "") ?? [],
   );
 
   // na vdd reduce baseado na qtd de cada elemento
@@ -58,7 +52,7 @@ const CartContext = ({ children }: { children: ReactNode }) => {
   };
 
   const total = cartProducts.reduce((acc, curr) => {
-    const value = curr.product.price * curr.qtd;
+    const value = Number(curr.product.price) * curr.qtd;
     return value + acc;
   }, 0);
 
